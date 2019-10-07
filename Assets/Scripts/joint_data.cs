@@ -7,6 +7,7 @@ public class JointDataHandler : MonoBehaviour
 {
     // Start is called before the first frame update
     private Model model;
+
     void Start()
     {
         CreateNewModel();
@@ -21,13 +22,15 @@ public class JointDataHandler : MonoBehaviour
     public void CreateNewModel()
     {
         model = new Model();
+        model.ModelDataList = new List<ModelData>();
     }
 
     public void UpdateJointLocations(Stack<string> JointNames, Stack<Vector3> JointLocations)
     {
         ModelData CurrentModelData = new ModelData();
+        CurrentModelData.JointLocations = new List<JointData>();
         CurrentModelData.frame = model.ModelDataList.Count;
-        while(JointLocations.Count < 0)
+        while(JointLocations.Count > 0)
         {
             JointData CurrentJointData = new JointData();
             CurrentJointData.JointName = JointNames.Pop();
@@ -35,15 +38,23 @@ public class JointDataHandler : MonoBehaviour
             CurrentModelData.JointLocations.Add(CurrentJointData);
         }
             
-        model.ModelDataList.Add(new ModelData());
+        model.ModelDataList.Add(CurrentModelData);
     }
 
     public void WriteJSON()
     {
         string objectToJSON = JsonUtility.ToJson(model, true);
-        using (StreamWriter file = new StreamWriter(@"C:\Users\Kinect\Documents\Movements\matchingMovements.json", true))
+        string JSONPath = Application.dataPath + "/JSONs/";
+        DirectoryInfo JSONDirectory = new DirectoryInfo(JSONPath);
+
+        using (StreamWriter file = new StreamWriter("Assets/JSONs/" + JSONDirectory.GetFiles("*.json").Length.ToString() + ".json", true))
         {
             file.WriteLine(objectToJSON);
         }
+    }
+
+    public int GetDataCount()
+    {
+        return model.ModelDataList.Count;
     }
 }

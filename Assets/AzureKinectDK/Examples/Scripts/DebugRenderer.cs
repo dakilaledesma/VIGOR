@@ -12,8 +12,7 @@ public class DebugRenderer : MonoBehaviour
     Skeleton skeleton;
     GameObject[] debugObjects;
     public Renderer renderer;
-    JointDataHandler handler;
-
+    JointDataHandler handler = new JointDataHandler();
     private void OnEnable()
     {
         this.device = Device.Open(0);
@@ -37,6 +36,7 @@ public class DebugRenderer : MonoBehaviour
         }
 
         handler.CreateNewModel();
+        print("Created new handler model");
     }
 
     private void OnDisable()
@@ -68,11 +68,11 @@ public class DebugRenderer : MonoBehaviour
         
         using (var frame = tracker.PopResult())
         {
-            Debug.LogFormat("{0} bodies found.", frame.NumBodies);
+            //Debug.LogFormat("{0} bodies found.", frame.NumBodies);
             if (frame.NumBodies > 0)
             {
                 var bodyId = frame.GetBodyId(0);
-                Debug.LogFormat("bodyId={0}", bodyId);
+                //Debug.LogFormat("bodyId={0}", bodyId);
                 this.skeleton = frame.GetSkeleton(0);
                 Stack<string> JointNames = new Stack<string>();
                 Stack<Vector3> JointLocations = new Stack<Vector3>();
@@ -90,7 +90,16 @@ public class DebugRenderer : MonoBehaviour
                     JointLocations.Push(v);
                 }
 
+                handler.UpdateJointLocations(JointNames, JointLocations);
+                if (handler.GetDataCount() == 500)
+                {
+                    Debug.Log("Wrote JSON!");
+                    handler.WriteJSON();
+                }
+
             }
+
+            
         }
     }
 }
