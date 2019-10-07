@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class JointDataHandler : MonoBehaviour
 {
@@ -35,5 +36,14 @@ public class JointDataHandler : MonoBehaviour
         }
             
         model.ModelDataList.Add(new ModelData());
+    }
+
+    public void WriteJSON()
+    {
+        string objectToJSON = JsonUtility.ToJson(model, true);
+        using (StreamWriter file = new StreamWriter(@"C:\Users\Kinect\Documents\Movements\matchingMovements.json", true))
+        {
+            file.WriteLine(objectToJSON);
+        }
     }
 }
