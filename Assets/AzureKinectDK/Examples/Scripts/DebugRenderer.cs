@@ -91,10 +91,11 @@ public class DebugRenderer : MonoBehaviour
                 }
 
                 handler.UpdateJointLocations(JointNames, JointLocations);
-                if (handler.GetDataCount() == 500)
+                if (handler.GetDataCount() == 5000)
                 {
                     Debug.Log("Wrote JSON!");
                     handler.WriteJSON();
+                    UnityEditor.EditorApplication.isPlaying = false;
                 }
 
             }
