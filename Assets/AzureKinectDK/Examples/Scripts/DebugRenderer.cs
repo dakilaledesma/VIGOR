@@ -13,6 +13,7 @@ public class DebugRenderer : MonoBehaviour
     GameObject[] debugObjects;
     public Renderer renderer;
     JointDataHandler handler = new JointDataHandler();
+    Streamer streamer = new Streamer();
     private void OnEnable()
     {
         this.device = Device.Open(0);
@@ -36,6 +37,8 @@ public class DebugRenderer : MonoBehaviour
         }
 
         handler.CreateNewModel();
+        streamer.Start();
+        //streamer.ListenForIncommingRequests();
         print("Created new handler model");
     }
 
@@ -90,13 +93,16 @@ public class DebugRenderer : MonoBehaviour
                     JointLocations.Push(v);
                 }
 
-                handler.UpdateJointLocations(JointNames, JointLocations);
-                if (handler.GetDataCount() == 5000)
-                {
-                    Debug.Log("Wrote JSON!");
-                    handler.WriteJSON();
-                    UnityEditor.EditorApplication.isPlaying = false;
-                }
+                //handler.UpdateJointLocations(JointNames, JointLocations);
+                //if (handler.GetDataCount() == 5000)
+                //{
+                //    Debug.Log("Wrote JSON!");
+                //    handler.WriteJSON();
+                //    UnityEditor.EditorApplication.isPlaying = false;
+                //}
+
+                string sjl = handler.StreamJointLocations(JointNames, JointLocations);
+                streamer.SendMessage(sjl);
 
             }
 

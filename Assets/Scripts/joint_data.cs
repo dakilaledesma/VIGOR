@@ -41,6 +41,27 @@ public class JointDataHandler : MonoBehaviour
         model.ModelDataList.Add(CurrentModelData);
     }
 
+    public string StreamJointLocations(Stack<string> JointNames, Stack<Vector3> JointLocations)
+    {
+        CreateNewModel();
+        ModelData CurrentModelData = new ModelData();
+        CurrentModelData.JointLocations = new List<JointData>();
+        CurrentModelData.frame = model.ModelDataList.Count;
+        while (JointLocations.Count > 0)
+        {
+            JointData CurrentJointData = new JointData();
+            CurrentJointData.JointName = JointNames.Pop();
+            CurrentJointData.location = JointLocations.Pop();
+            CurrentModelData.JointLocations.Add(CurrentJointData);
+        }
+
+        model.ModelDataList.Add(CurrentModelData);
+
+        string objectToJSON = JsonUtility.ToJson(model, true);
+        return objectToJSON;
+    }
+
+
     public void WriteJSON()
     {
         string objectToJSON = JsonUtility.ToJson(model, true);
