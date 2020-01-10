@@ -47,8 +47,8 @@ public class DebugRenderer : MonoBehaviour
             csv += csv_frames[i] + "\n";
         }
 
-        string file = "Assets/Resources/test.csv";
-
+        string file = "Assets/Resources/akrecord-" + DateTime.Now.ToString("yyyy-dd-M-HH-mm-ss") + ".csv";
+        
         //Write some text to the test.txt file
         StreamWriter writer = new StreamWriter(file, true);
         writer.WriteLine(csv);
